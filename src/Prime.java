@@ -12,43 +12,26 @@ public class Prime extends Thread{
 		this.threadNumber = threadNumber;
 		this.startingPosition = startingPosition;
 	}
-
+	BigInteger denominatorBig = BigInteger.ONE;
 	public boolean isPrime(BigInteger n)
 	{
-		BigInteger numerator = BigInteger.ONE;
-		BigInteger denominator = BigInteger.ONE;
-
-		for(BigInteger m = BigInteger.ONE; m.compareTo(n.subtract(BigInteger.ONE).divide(BigInteger.valueOf(2))) <= 0; m = m.add(BigInteger.ONE))
+		denominatorBig = BigInteger.ONE;
+		for(BigInteger j = n.subtract(BigInteger.valueOf(2)); j.compareTo(n.divide(BigInteger.valueOf(3))) > 0; j = j.subtract(BigInteger.valueOf(2)))
 		{
-			numerator = BigInteger.ONE;
-			denominator = BigInteger.ONE;
-			for(BigInteger j = n.subtract(m); j.compareTo(BigInteger.ONE) > 0; j = j.subtract(BigInteger.ONE))
-			{
-				denominator = denominator.multiply(j).mod(n);
-				if(denominator.equals(BigInteger.ZERO))
-					return false;
-			}
-
-			//System.out.println(denominator);
-			for(BigInteger j = BigInteger.ZERO; n.subtract(m).compareTo(j) > 0; j = j.add(BigInteger.ONE))
-			{
-				numerator = numerator.multiply(n.subtract(j).mod(n));
-				if(numerator.equals(BigInteger.ZERO))
-					return true;
-			}
-			if(!numerator.divide(denominator).equals(BigInteger.ZERO))
-				//			if(!numerator.mod(denominator).equals(BigInteger.ZERO))
+			denominatorBig = denominatorBig.multiply(j).mod(n);
+			if(denominatorBig.equals(BigInteger.ZERO))
 				return false;
 		}
-		return false;
+		if((n.mod(BigInteger.valueOf(3)).equals(BigInteger.ZERO) && !n.equals(BigInteger.valueOf(3))) || (n.mod(BigInteger.valueOf(5)).equals(BigInteger.ZERO) && !n.equals(BigInteger.valueOf(5))))
+			return false;
+		return true;
 	}
-	Long numerator = 1L;
 	Long denominator = 1L;
 	public boolean isPrime(Long n)
 	{
-		numerator = 1L;
 		denominator = 1L;
 		//Making n/3 larger reduces accuracy of test
+		//I believe the closer to 0 it gets the more accurate it is
 		for(Long j = n-2; j > n/3; j-=2)
 		{
 			denominator = (denominator * j) % n;
@@ -56,9 +39,7 @@ public class Prime extends Thread{
 				return false;
 		}
 		if((n%3 == 0 && n != 3) || (n%5 == 0 && n != 5))
-		{
 			return false;
-		}
 		return true;
 	}
 
@@ -66,42 +47,42 @@ public class Prime extends Thread{
 	{
 		int count = 1;
 		int state = 0;
-		long total = 10000;
-		for(Long n = (long) startingPosition; n < total; n+=8)
-		{
-			//BigInteger n = BigInteger.valueOf(9223372036854775803L);
-			if(state == 0 && n >= total/4)
-			{
-				System.out.println("Thread " + threadNumber + " is 25% done");
-				state++;
-			}
-			else if(state == 1 && n >= total/2)
-			{
-				System.out.println("Thread " + threadNumber + " is 50% done");
-				state++;
-			}
-			else if(state == 2 && n >= (total/4) * 3)
-			{
-				System.out.println("Thread " + threadNumber + " is 75% done");
-				state++;
-			}
-			if(isPrime(n))
-			{
-				System.out.println("Prime: " + n + " Prime #: " + count + " Thread #: " + threadNumber);
-				count++;
-			}
-		}
-		totals[threadNumber] = count - 1;
+//		long total = 100000;
+//		for(Long n = (long) startingPosition; n < total; n+=8)
+//		{
+//			//BigInteger n = BigInteger.valueOf(9223372036854775803L);
+//			if(state == 0 && n >= total/4)
+//			{
+//				System.out.println("Thread " + threadNumber + " is 25% done");
+//				state++;
+//			}
+//			else if(state == 1 && n >= total/2)
+//			{
+//				System.out.println("Thread " + threadNumber + " is 50% done");
+//				state++;
+//			}
+//			else if(state == 2 && n >= (total/4) * 3)
+//			{
+//				System.out.println("Thread " + threadNumber + " is 75% done");
+//				state++;
+//			}
+//			if(isPrime(n))
+//			{
+//				//System.out.println("Prime: " + n + " Prime #: " + count + " Thread #: " + threadNumber);
+//				count++;
+//			}
+//		}
+//		totals[threadNumber] = count - 1;
 
-		//		for(BigInteger n = BigInteger.valueOf(startingPosition); n.compareTo(BigInteger.valueOf(10000)) < 0; n = n.add(BigInteger.valueOf(8)))
-		//		{
-		//			if(isPrime(n))
-		//			{
-		//				System.out.println("Prime: " + n + " Prime #: " + count + " Thread #: " + (iterateBy-1)/2);
-		//				count++;
-		//			}
-		//		}
-		//		totals[threadNumber] = count - 1;
+				for(BigInteger n = BigInteger.valueOf(startingPosition); n.compareTo(BigInteger.valueOf(9223372036854775803L)) < 0; n = n.add(BigInteger.valueOf(8)))
+				{
+					if(isPrime(n))
+					{
+						System.out.println("Prime: " + n + " Prime #: " + count + " Thread #: " + threadNumber);
+						count++;
+					}
+				}
+				totals[threadNumber] = count - 1;
 
 	}
 	public static void displayTotals()
