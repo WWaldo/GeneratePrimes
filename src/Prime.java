@@ -5,12 +5,14 @@ public class Prime extends Thread{
 	public int perThread = 2500;
 	public int startingPosition;
 	public int threadNumber;
-	public static int[] totals = new int[4];
+	public int threads;
+	public static int[] totals;
 
-	public Prime(int threadNumber, int startingPosition)
+	public Prime(int threadNumber, int startingPosition, int threads)
 	{
 		this.threadNumber = threadNumber;
 		this.startingPosition = startingPosition;
+		this.threads = threads;	
 	}
 	BigInteger denominatorBig = BigInteger.ONE;
 	public boolean isPrime(BigInteger n)
@@ -74,7 +76,7 @@ public class Prime extends Thread{
 //		}
 //		totals[threadNumber] = count - 1;
 
-				for(BigInteger n = BigInteger.valueOf(startingPosition); n.compareTo(BigInteger.valueOf(9223372036854775803L)) < 0; n = n.add(BigInteger.valueOf(8)))
+				for(BigInteger n = BigInteger.valueOf(startingPosition); n.compareTo(BigInteger.valueOf(9223372036854775803L)) < 0; n = n.add(BigInteger.valueOf(threads * 2)))
 				{
 					if(isPrime(n))
 					{
@@ -103,12 +105,13 @@ public class Prime extends Thread{
 		} else	{
 		 	threads = Runtime.getRuntime().availableProcessors();
 		}		
+		totals = new int[threads];
 		System.out.println(threads);
 		Prime [] thread = new Prime[threads];
 
 		for(int i = 0; i < threads; i++)
 		{
-			thread[i] = new Prime(i, (2*8) + 3);
+			thread[i] = new Prime(i, (2*i) + 3, threads);
 		}
 		//Prime thread0 = new Prime(0,3);
 		//Prime thread1 = new Prime(1,5);
@@ -116,7 +119,7 @@ public class Prime extends Thread{
 		//Prime thread3 = new Prime(3,9);
 
 		Long start = System.nanoTime();
-		
+
 		for(int i = 0; i < threads; i++)
 		{
 			thread[i].start();
