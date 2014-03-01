@@ -5,14 +5,13 @@ public class Prime extends Thread{
 	public int perThread = 2500;
 	public int startingPosition;
 	public int threadNumber;
-	public int threads;
+	public static int threads;
 	public static int[] totals;
 
 	public Prime(int threadNumber, int startingPosition, int threads)
 	{
 		this.threadNumber = threadNumber;
 		this.startingPosition = startingPosition;
-		this.threads = threads;	
 	}
 	BigInteger denominatorBig = BigInteger.ONE;
 	public boolean isPrime(BigInteger n)
@@ -76,11 +75,11 @@ public class Prime extends Thread{
 //		}
 //		totals[threadNumber] = count - 1;
 
-				for(BigInteger n = BigInteger.valueOf(startingPosition); n.compareTo(BigInteger.valueOf(9223372036854775803L)) < 0; n = n.add(BigInteger.valueOf(threads * 2)))
+				for(BigInteger n = BigInteger.valueOf(startingPosition); n.compareTo(BigInteger.valueOf(10000L)) < 0; n = n.add(BigInteger.valueOf(threads * 2)))
 				{
 					if(isPrime(n))
 					{
-						System.out.print("\rPrime: " + n + " Prime #: " + count + " Thread #: " + threadNumber);
+						//System.out.print("\rPrime: " + n + " Prime #: " + count + " Thread #: " + threadNumber);
 						count++;
 					}
 				}
@@ -99,7 +98,7 @@ public class Prime extends Thread{
 	public static void main(String[] args) {
 		System.out.println("Start");
 		//2147483647
-		int threads;
+		//int threads;
 		if( args.length > 0) {
 			threads = Integer.parseInt(args[0]);
 		} else	{
@@ -141,7 +140,7 @@ public class Prime extends Thread{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println((System.nanoTime() - start)/1000000L);
+		System.out.println("\nRuntime: "+(System.nanoTime() - start)/1000000L+" milliseconds");
 		displayTotals();
 	}
 }
