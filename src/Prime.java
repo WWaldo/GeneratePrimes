@@ -78,7 +78,7 @@ public class Prime extends Thread{
 				{
 					if(isPrime(n))
 					{
-						System.out.println("Prime: " + n + " Prime #: " + count + " Thread #: " + threadNumber);
+						System.out.print("\rPrime: " + n + " Prime #: " + count + " Thread #: " + threadNumber);
 						count++;
 					}
 				}
@@ -97,22 +97,44 @@ public class Prime extends Thread{
 	public static void main(String[] args) {
 		System.out.println("Start");
 		//2147483647
-		Prime thread0 = new Prime(0,3);
-		Prime thread1 = new Prime(1,5);
-		Prime thread2 = new Prime(2,7);
-		Prime thread3 = new Prime(3,9);
+		int threads;
+		if( args.length > 0) {
+			threads = Integer.parseInt(args[0]);
+		} else	{
+		 	threads = Runtime.getRuntime().availableProcessors();
+		}		
+		System.out.println(threads);
+		Prime [] thread = new Prime[threads];
+
+		for(int i = 0; i < threads; i++)
+		{
+			thread[i] = new Prime(i, (2*8) + 3);
+		}
+		//Prime thread0 = new Prime(0,3);
+		//Prime thread1 = new Prime(1,5);
+		//Prime thread2 = new Prime(2,7);
+		//Prime thread3 = new Prime(3,9);
 
 		Long start = System.nanoTime();
-		thread0.start();
-		thread1.start();
-		thread2.start();
-		thread3.start();
+		
+		for(int i = 0; i < threads; i++)
+		{
+			thread[i].start();
+		}
+		//thread0.start();
+		//thread1.start();
+		//thread2.start();
+		//thread3.start();
 
 		try {
-			thread0.join();
-			thread1.join();
-			thread2.join();
-			thread3.join();
+			for(int i = 0; i < threads; i++)
+			{
+				thread[i].join();
+			}
+			//thread0.join();
+			//thread1.join();
+			//thread2.join();
+			//thread3.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
